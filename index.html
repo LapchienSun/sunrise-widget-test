@@ -234,8 +234,9 @@
                 document.cookie = `sunrise_session=${userEmail}; path=/; samesite=lax`;
                 console.log('Cookie set for localhost (no domain specified)');
             } else {
-                // Production setting for customers
-                document.cookie = `sunrise_session=${userEmail}; domain=.${window.location.hostname}; path=/; secure; samesite=strict`;
+                // Production setting - try setting with your API's domain
+                document.cookie = `sunrise_session=${userEmail}; domain=.sunrise-saas.com; path=/; secure; samesite=none`;
+                console.log('Cookie set with .sunrise-saas.com domain for production');
             }
             
             // Verify cookie was set
