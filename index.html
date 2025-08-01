@@ -126,11 +126,26 @@
             border-radius: 4px;
             font-size: 1rem;
         }
+
+        .endpoint-info {
+            background: #e7f3ff;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border-left: 3px solid #0066cc;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🧪 Widget Authentication Test</h1>
+        
+        <!-- Endpoint Info -->
+        <div class="endpoint-info">
+            <strong>Widget Endpoint:</strong> https://solvyr-chatbot.sunrise-saas.com/sunrise-solvyr-widget.js<br>
+            <strong>Auth API:</strong> https://chatbot-api-admin.sunrise-saas.com/api/get-current-user-details<br>
+            <strong>Chat API:</strong> https://solvyr-chatbot.sunrise-saas.com/chat
+        </div>
         
         <!-- Method Comparison -->
         <div class="method-comparison">
@@ -274,11 +289,17 @@
                     userIdentifier: selectedUser,
                     position: 'bottom-right',
                     theme: {
-                        primaryColor: '#667eea'
+                        primaryColor: '#f47303'  // Sunrise orange
                     }
                 });
                 
                 log(`Widget initialized with userIdentifier: ${selectedUser}`, 'info');
+                
+                // Check state after initialization
+                setTimeout(() => {
+                    const state = SunriseSolvyr.getState();
+                    log(`Widget state - isOpen: ${state.isOpen}, isAuthenticated: ${state.isAuthenticated}`, 'info');
+                }, 1000);
                 
             } else {
                 log('SunriseSolvyr widget not loaded yet', 'error');
@@ -305,13 +326,23 @@
                     userIdentifier: selectedUser,
                     position: 'bottom-right',
                     theme: {
-                        primaryColor: '#667eea'
+                        primaryColor: '#f47303'  // Sunrise orange
                     }
                 });
                 
                 widgetStatus.innerHTML += `<span class="status-info">User: ${selectedUser}</span><br>`;
                 widgetStatus.innerHTML += `<span class="status-info">Method: User Identifier Header</span><br>`;
                 widgetStatus.innerHTML += `<span class="status-info">Chat bubble should appear in bottom-right</span>`;
+                
+                // Monitor authentication status
+                setTimeout(() => {
+                    const state = SunriseSolvyr.getState();
+                    if (state.isAuthenticated) {
+                        widgetStatus.innerHTML += `<br><span class="status-success">Authentication successful ✓</span>`;
+                    } else {
+                        widgetStatus.innerHTML += `<br><span class="status-error">Authentication pending or failed</span>`;
+                    }
+                }, 2000);
                 
             } else {
                 widgetStatus.innerHTML = `<span class="status-error">Widget script not loaded ✗</span>`;
@@ -335,7 +366,7 @@
         });
     </script>
 
-    <!-- Load the updated widget -->
-    <script src="https://chat-widget.sunrise-saas.com/sunrise-solvyr-widget.js"></script>
+    <!-- Load the widget from the correct endpoint -->
+    <script src="https://solvyr-chatbot.sunrise-saas.com/sunrise-solvyr-widget.js"></script>
 </body>
 </html>
